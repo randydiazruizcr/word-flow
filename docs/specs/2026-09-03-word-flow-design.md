@@ -22,16 +22,16 @@ idea and rebuilds it. It is not a port — no code is carried over.
 These are the concrete defects that justify the rewrite. Each one has a
 counterpart in this design.
 
-| Original | Consequence |
-| --- | --- |
-| The `str.replace(KEBAB_REGEX, …)` result is discarded | The camelCase → kebab conversion it appears to do never happens. `fixLoginBug` stays `fixLoginBug`. |
-| Ticket prefix `CON-` hardcoded in a template literal | Unusable by anyone whose project is not called CON. |
-| Separators removed by `split().join()` over a hand-written list, with a stray `,,` (sparse array hole) | Anything outside that list survives: accents, emoji, `#`, `%`, `+`. |
-| No Unicode normalization | `Corrección` becomes `corrección`, which git accepts but is unpleasant in a terminal and breaks some tooling. |
-| Empty fields concatenated blindly | An empty ticket yields `feature/CON--name`. |
-| No validation | Nothing stops `feature/.name.lock`, which `git checkout -b` rejects with a cryptic error. |
-| Falls back to the raw name when no id is given | The branch type silently disappears from the output. |
-| `document.execCommand('copy')` | Deprecated. |
+| Original                                                                                               | Consequence                                                                                                   |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| The `str.replace(KEBAB_REGEX, …)` result is discarded                                                  | The camelCase → kebab conversion it appears to do never happens. `fixLoginBug` stays `fixLoginBug`.           |
+| Ticket prefix `CON-` hardcoded in a template literal                                                   | Unusable by anyone whose project is not called CON.                                                           |
+| Separators removed by `split().join()` over a hand-written list, with a stray `,,` (sparse array hole) | Anything outside that list survives: accents, emoji, `#`, `%`, `+`.                                           |
+| No Unicode normalization                                                                               | `Corrección` becomes `corrección`, which git accepts but is unpleasant in a terminal and breaks some tooling. |
+| Empty fields concatenated blindly                                                                      | An empty ticket yields `feature/CON--name`.                                                                   |
+| No validation                                                                                          | Nothing stops `feature/.name.lock`, which `git checkout -b` rejects with a cryptic error.                     |
+| Falls back to the raw name when no id is given                                                         | The branch type silently disappears from the output.                                                          |
+| `document.execCommand('copy')`                                                                         | Deprecated.                                                                                                   |
 
 ## Scope
 
@@ -42,7 +42,7 @@ counterpart in this design.
   which rule failed, in plain language.
 - Show the assembled name with each segment colored by the token it came from.
 - Produce the `git checkout -b <name>` command, ready to copy.
-- Share the *configuration* (template, project prefix, type list) through the
+- Share the _configuration_ (template, project prefix, type list) through the
   URL query string, so a team can hand each other a link that carries their
   convention.
 - Keyboard shortcuts for the copy actions.
@@ -134,12 +134,12 @@ while still returning the nodes it understood, so the preview keeps rendering.
 Each token declares how its value is transformed. This is what replaces the
 hardcoded `CON-` while keeping the output people actually want:
 
-| Token | Mode | Input → output |
-| --- | --- | --- |
-| `type` | `slug` | `feature` → `feature` |
+| Token     | Mode       | Input → output                                                |
+| --------- | ---------- | ------------------------------------------------------------- |
+| `type`    | `slug`     | `feature` → `feature`                                         |
 | `project` | `preserve` | `CON` → `CON` — cleaned of illegal characters, case untouched |
-| `ticket` | `preserve` | `1234` → `1234` |
-| `slug` | `slug` | `Arreglar Login Ñoño` → `arreglar-login-nono` |
+| `ticket`  | `preserve` | `1234` → `1234`                                               |
+| `slug`    | `slug`     | `Arreglar Login Ñoño` → `arreglar-login-nono`                 |
 
 `preserve` runs the same pipeline as `slug` minus two steps: no camelCase
 split and no lowercasing. The character set it emits is therefore
@@ -201,7 +201,7 @@ id is what tests assert on, so every rule below gets its own test.
 
 **Why validation is not redundant with slugify.** Token values come out
 sanitized, so on their own they can never break a rule. The template's
-*literal* text does not: `{type} {slug}` has a space in it, `{type}/.{slug}`
+_literal_ text does not: `{type} {slug}` has a space in it, `{type}/.{slug}`
 opens a component with a dot, `{slug}.lock` ends in a forbidden suffix. Those
 literals are deliberately left untouched — silently rewriting what someone
 typed into the template box would be worse than telling them it is invalid.
@@ -209,22 +209,22 @@ Validation is what makes the template box safe to leave editable.
 
 Rules, from `git check-ref-format` (a branch name is `refs/heads/<name>`):
 
-| Rule id | Rejects |
-| --- | --- |
-| `empty` | An empty name. |
-| `leading-dash` | Starts with `-`; git parses it as a command-line option. |
-| `component-leading-dot` | Any `/`-separated component starting with `.`. |
-| `trailing-dot` | Ends with `.`. |
-| `lock-suffix` | Any component ending in `.lock`. |
-| `double-dot` | Contains `..`. |
-| `at-brace` | Contains `@{`. |
-| `single-at` | Is exactly `@`. |
-| `backslash` | Contains a backslash. |
-| `space` | Contains a space. |
-| `control-char` | Contains an ASCII control character or DEL. |
-| `special-char` | Contains `~`, `^`, `:`, `?`, `*` or `[`. |
-| `slash-edge` | Starts or ends with `/`. |
-| `double-slash` | Contains `//`. |
+| Rule id                 | Rejects                                                  |
+| ----------------------- | -------------------------------------------------------- |
+| `empty`                 | An empty name.                                           |
+| `leading-dash`          | Starts with `-`; git parses it as a command-line option. |
+| `component-leading-dot` | Any `/`-separated component starting with `.`.           |
+| `trailing-dot`          | Ends with `.`.                                           |
+| `lock-suffix`           | Any component ending in `.lock`.                         |
+| `double-dot`            | Contains `..`.                                           |
+| `at-brace`              | Contains `@{`.                                           |
+| `single-at`             | Is exactly `@`.                                          |
+| `backslash`             | Contains a backslash.                                    |
+| `space`                 | Contains a space.                                        |
+| `control-char`          | Contains an ASCII control character or DEL.              |
+| `special-char`          | Contains `~`, `^`, `:`, `?`, `*` or `[`.                 |
+| `slash-edge`            | Starts or ends with `/`.                                 |
+| `double-slash`          | Contains `//`.                                           |
 
 One warning rather than an error: `too-long`, over 100 characters. Git imposes
 no limit of its own, but longer names wrap in every terminal and truncate in
@@ -232,14 +232,14 @@ every UI.
 
 ### Presets
 
-Three, shipped in `presets.ts`. A preset sets the template *and* the type list;
+Three, shipped in `presets.ts`. A preset sets the template _and_ the type list;
 after applying one, both stay editable.
 
-| Preset | Template | Example |
-| --- | --- | --- |
+| Preset              | Template                           | Example                           |
+| ------------------- | ---------------------------------- | --------------------------------- |
 | Jira / Azure Boards | `{type}/{project}-{ticket}-{slug}` | `feature/CON-1234-arreglar-login` |
-| GitFlow | `{type}/{slug}` | `feature/arreglar-login` |
-| Ticket first | `{ticket}-{slug}` | `1234-arreglar-login` |
+| GitFlow             | `{type}/{slug}`                    | `feature/arreglar-login`          |
+| Ticket first        | `{ticket}-{slug}`                  | `1234-arreglar-login`             |
 
 Default type list: `feature`, `bugfix`, `hotfix`, `chore`, `release`.
 
@@ -254,18 +254,18 @@ The split between configuration and values is the axis the whole UI turns on.
 
 ```ts
 type Config = {
-  // your team's convention — travels in the URL
-  template: string
-  project: string
-  types: string[]
-}
+    // your team's convention — travels in the URL
+    template: string;
+    project: string;
+    types: string[];
+};
 
 type Values = {
-  // this branch, right now — never leaves the tab
-  type: string
-  ticket: string
-  description: string // free text; becomes {slug}
-}
+    // this branch, right now — never leaves the tab
+    type: string;
+    ticket: string;
+    description: string; // free text; becomes {slug}
+};
 ```
 
 Everything else comes out of one pure function, `buildBranch(template, values)`,
@@ -320,12 +320,12 @@ Rejected alternatives:
 
 ## Keyboard shortcuts
 
-| Keys | Action |
-| --- | --- |
-| `Enter` (in any field) | Copy the branch name |
-| `Ctrl`/`Cmd` + `Enter` | Copy the `git checkout -b` command |
-| `Ctrl`/`Cmd` + `K` | Focus the description |
-| `Esc` | Clear ticket and description — never the configuration |
+| Keys                   | Action                                                 |
+| ---------------------- | ------------------------------------------------------ |
+| `Enter` (in any field) | Copy the branch name                                   |
+| `Ctrl`/`Cmd` + `Enter` | Copy the `git checkout -b` command                     |
+| `Ctrl`/`Cmd` + `K`     | Focus the description                                  |
+| `Esc`                  | Clear ticket and description — never the configuration |
 
 Listed in the UI, not hidden. `Enter` copying is safe here because the screen
 has exactly one output and nothing to submit.
