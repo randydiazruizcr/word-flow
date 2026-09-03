@@ -11,10 +11,13 @@ import { BranchPreview } from '@/components/branch-output/BranchPreview';
 import { GitCommand } from '@/components/branch-output/GitCommand';
 import { ValidationReport } from '@/components/branch-output/ValidationReport';
 import { Panel } from '@/components/ui/Panel';
+import { ShortcutHints } from '@/components/ui/ShortcutHints';
 import { useConfigUrlSync } from '@/store/use-config-url-sync';
+import { useShortcuts } from '@/store/use-shortcuts';
 
 export default function Home() {
     useConfigUrlSync();
+    const { copied } = useShortcuts();
 
     return (
         <main className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6">
@@ -47,6 +50,8 @@ export default function Home() {
                 <ValidationReport />
                 <GitCommand />
             </section>
+
+            <ShortcutHints copied={copied} />
         </main>
     );
 }
