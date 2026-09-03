@@ -1,7 +1,8 @@
 # word-flow — Design Spec
 
 Date: 2026-09-03
-Status: Approved, not yet implemented. Sections describe what is to be built.
+Status: Implemented. Sections below describe what was built; where the
+implementation departed from the original design, the reason is stated inline.
 
 ## Purpose
 
@@ -302,12 +303,25 @@ One screen, no tabs, no modes. Stacked on mobile, two columns from `lg`:
   the `git checkout -b` command with its copy button.
 
 Color carries exactly one meaning — which token a piece of the name came from —
-and nothing else on the screen is colored. Same discipline as `jwt-viewer`'s
-three token segments, and it is what makes an unfamiliar template legible at a
-glance.
+and nothing else on the screen is colored. The field label carries the same
+color as the segment it produces, so the eye can follow what it typed into
+where it landed. Same discipline as `jwt-viewer`'s three token segments, and it
+is what makes an unfamiliar template legible at a glance.
+
+**Built with three colors, not four.** The design called for one hue per token;
+`{slug}` ended up in plain ink instead. The description is the _body_ of the
+name and the other three are metadata about it — coloring all four flattens
+that hierarchy and the sentence stops reading as a sentence. Its token is still
+declared (`--tok-slug`), pointing at `--ink`, so the mechanism stays uniform and
+it is one line to change back.
 
 Empty state: the preview renders the template with dimmed placeholders, so the
-shape of the result is visible before anything is typed.
+shape of the result is visible before anything is typed. The verdict is _not_
+rendered as an error there — an empty name really is invalid and `validate` says
+so, but a freshly opened page gets a neutral prompt rather than a red failure.
+
+The `git checkout -b` command is hidden while the verdict is an error. Handing
+someone a command that git will reject is the loop this tool exists to prevent.
 
 Rejected alternatives:
 
