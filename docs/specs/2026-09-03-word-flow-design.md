@@ -98,12 +98,16 @@ src/
       assemble.ts     # nodes + values → Segment[] (collapses empty tokens)
       validate.ts     # git check-ref-format rules → ValidationResult
       presets.ts      # the three shipped conventions
+      build.ts        # the one entry point above calls: parse → assemble → validate
       types.ts
     url/
       config-params.ts # Config ⇄ URLSearchParams
     cn.ts
   store/
-    branch-store.ts   # Zustand: config + values, plus derived selectors
+    branch-store.ts       # Zustand: config + values. No derived field.
+    use-branch-result.ts  # buildBranch(), memoized — the only derivation site
+    use-config-url-sync.ts
+    use-shortcuts.ts
   test/
     setup.ts
 ```
@@ -176,12 +180,15 @@ it wrong:
 
 1. A token whose value is empty becomes a hole and is dropped.
 2. For each hole, trim `[-_.]` characters from the **end of the preceding
-   literal**; if there is no preceding literal, trim them from the **start of
-   the following** one. Only one side is trimmed, or
-   `{project}-{ticket}-{slug}` would lose both dashes and glue `CON` to the
-   description.
+   literal**. If that removes nothing — there is no preceding literal, or it
+   held no trimmable character — trim them from the **start of the following**
+   one instead. Exactly one side is trimmed, or `{project}-{ticket}-{slug}`
+   would lose both dashes and glue `CON` to the description.
 3. `/` is never trimmed by step 2 — `{type}/{ticket}-{slug}` with no ticket
-   must stay `feature/arreglar-login`, not `feature-arreglar-login`.
+   must stay `feature/arreglar-login`, not `feature-arreglar-login`. This is
+   also why step 2 needs its second attempt: there the preceding literal is
+   `/`, nothing comes off it, and without falling through to the following
+   literal the result would be `feature/-arreglar-login`.
 4. Final pass over the joined result: collapse `//` and trim `[-_./]` from
    both ends. That is what removes the trailing slash from `{type}/{slug}`
    with an empty description.
@@ -261,9 +268,17 @@ type Values = {
 }
 ```
 
-Everything else is derived by pure selectors over `lib/branch`: `nodes`,
-`templateIssue`, `segments`, `branchName`, `validation`, `command`. The store
-holds no derived field, so there is no second copy of anything to keep in sync.
+Everything else comes out of one pure function, `buildBranch(template, values)`,
+which returns `nodes`, `templateIssues`, `segments`, `name`, `validation`,
+`command` and `slugDropped`. The store holds no derived field, so there is no
+second copy of anything to keep in sync, and the whole derivation is testable
+without rendering anything.
+
+`slugDropped` covers a hole this design creates for itself: rule 5 of the
+slugify pipeline drops every character outside `[a-z0-9]`, so a description
+written in Cyrillic, Greek or CJK produces an empty slug. Silently dropping
+what someone typed is exactly the behaviour being fixed in the original, so the
+UI says so instead.
 
 ## URL sync
 
