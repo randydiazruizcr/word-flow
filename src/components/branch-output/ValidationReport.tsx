@@ -54,7 +54,7 @@ export function ValidationReport() {
             )}
 
             {!untouched && validation.issues.length > 0 ? (
-                <ul className="flex flex-col gap-1 text-ink-mid">
+                <ul data-testid="validation-issues" className="flex flex-col gap-1 text-ink-mid">
                     {validation.issues.map((issue) => (
                         <li key={issue.rule}>{issue.message}</li>
                     ))}

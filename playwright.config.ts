@@ -15,13 +15,15 @@ export default defineConfig({
     retries: process.env.CI ? 2 : 0,
     reporter: 'list',
     use: {
-        baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000',
+        baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3100',
         trace: 'on-first-retry',
     },
     projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
     webServer: {
-        command: 'yarn dev',
-        url: 'http://localhost:3000',
+        // Puerto propio a propósito: en el 3000 suele haber otro proyecto del workspace y
+        // `reuseExistingServer` correría toda la suite contra la app equivocada.
+        command: 'yarn dev --port 3100',
+        url: 'http://localhost:3100',
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,
     },
