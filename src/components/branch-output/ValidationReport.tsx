@@ -29,22 +29,31 @@ function templateMessage(issue: TemplateIssue): string {
 }
 
 export function ValidationReport() {
-    const { validation, templateIssues, slugDropped } = useBranchResult();
+    const { name, validation, templateIssues, slugDropped } = useBranchResult();
     const verdict = VERDICT[validation.status];
     const Icon = VERDICT_ICON[validation.status];
 
+    // Una pantalla recién abierta no falló nada: no hay por qué recibirla en rojo.
+    const untouched = name === '';
+
     return (
         <div className="flex flex-col gap-2 text-sm">
-            <p
-                data-testid="verdict"
-                data-status={validation.status}
-                className={cn('flex items-center gap-2 font-medium', verdict.className)}
-            >
-                <Icon aria-hidden className="size-4 shrink-0" />
-                {verdict.text}
-            </p>
+            {untouched ? (
+                <p data-testid="verdict" data-status="empty" className="text-ink-mid">
+                    Completá los campos y acá te digo si el nombre le sirve a git.
+                </p>
+            ) : (
+                <p
+                    data-testid="verdict"
+                    data-status={validation.status}
+                    className={cn('flex items-center gap-2 font-medium', verdict.className)}
+                >
+                    <Icon aria-hidden className="size-4 shrink-0" />
+                    {verdict.text}
+                </p>
+            )}
 
-            {validation.issues.length > 0 ? (
+            {!untouched && validation.issues.length > 0 ? (
                 <ul className="flex flex-col gap-1 text-ink-mid">
                     {validation.issues.map((issue) => (
                         <li key={issue.rule}>{issue.message}</li>

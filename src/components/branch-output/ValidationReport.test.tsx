@@ -41,6 +41,12 @@ describe('ValidationReport', () => {
         expect(issues.getByText(/«rama»/)).toBeInTheDocument();
     });
 
+    it('con la pantalla recién abierta no recibe en rojo', () => {
+        useBranchStore.getState().setType('');
+        render(<ValidationReport />);
+        expect(screen.getByTestId('verdict')).toHaveAttribute('data-status', 'empty');
+    });
+
     it('avisa cuando la descripción no dejó nada usable', () => {
         setUp('{type}/{slug}', 'Привет');
         render(<ValidationReport />);
