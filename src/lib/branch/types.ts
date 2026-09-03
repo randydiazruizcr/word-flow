@@ -3,9 +3,7 @@ export type TokenName = 'type' | 'project' | 'ticket' | 'slug';
 export type TemplateNode = { kind: 'literal'; text: string } | { kind: 'token'; name: TokenName };
 
 export type TemplateIssue =
-    | { kind: 'empty' }
-    | { kind: 'unknown-token'; token: string }
-    | { kind: 'unclosed-brace' };
+    { kind: 'empty' } | { kind: 'unknown-token'; token: string } | { kind: 'unclosed-brace' };
 
 export type ParsedTemplate = {
     nodes: TemplateNode[];
