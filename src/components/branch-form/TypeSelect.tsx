@@ -1,7 +1,7 @@
 'use client';
 
-import { Field, inputClassName } from '@/components/ui/Field';
-import { cn } from '@/lib/cn';
+import { Field } from '@/components/ui/Field';
+import { Select } from '@/components/ui/Select';
 import { useBranchStore } from '@/store/branch-store';
 
 export function TypeSelect() {
@@ -17,19 +17,14 @@ export function TypeSelect() {
             tokenClassName="text-tok-type"
             hint={empty ? 'Agregá algún tipo en la configuración.' : undefined}
         >
-            <select
+            <Select
                 id="type"
                 value={type}
+                options={types}
+                onChange={setType}
                 disabled={empty}
-                onChange={(event) => setType(event.target.value)}
-                className={cn(inputClassName, 'disabled:text-ink-muted')}
-            >
-                {types.map((option) => (
-                    <option key={option} value={option}>
-                        {option}
-                    </option>
-                ))}
-            </select>
+                placeholder="Sin tipos"
+            />
         </Field>
     );
 }

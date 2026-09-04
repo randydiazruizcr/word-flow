@@ -43,9 +43,6 @@ counterpart in this design.
   which rule failed, in plain language.
 - Show the assembled name with each segment colored by the token it came from.
 - Produce the `git checkout -b <name>` command, ready to copy.
-- Share the _configuration_ (template, project prefix, type list) through the
-  URL query string, so a team can hand each other a link that carries their
-  convention.
 - Keyboard shortcuts for the copy actions.
 - 100% client-side: no backend, no API route, no network call of any kind.
 
@@ -101,8 +98,6 @@ src/
       presets.ts      # the three shipped conventions
       build.ts        # the one entry point above calls: parse → assemble → validate
       types.ts
-    url/
-      config-params.ts # Config ⇄ URLSearchParams
     cn.ts
   store/
     branch-store.ts       # Zustand: config + values. No derived field.
@@ -281,14 +276,18 @@ written in Cyrillic, Greek or CJK produces an empty slug. Silently dropping
 what someone typed is exactly the behaviour being fixed in the original, so the
 UI says so instead.
 
-## URL sync
+## URL sync — built, then removed
 
-`?t=<template>&p=<project>&types=<a,b,c>` — configuration only. The ticket and
-the description stay out on purpose: the link hands a colleague your
-convention, not your current task.
+The configuration used to travel in the query string
+(`?t=<template>&p=<project>&types=<a,b,c>`) so a team could share a link that
+carried their convention. It worked, and it was cut after seeing it: a template
+is mostly braces and slashes, so the address bar filled with
+`%7Btype%7D%2F%7Bproject%7D` for a page with three fields on it. The cost in
+noise was larger than the sharing was worth.
 
-Read once on mount. Written back with `history.replaceState`, debounced, so
-typing a template does not push a hundred entries into the back button.
+Nothing is persisted now; the configuration resets on reload. If that becomes
+annoying, `localStorage` is the place for it — it keeps the convention without
+putting anything in the address bar.
 
 ## UI approach
 
@@ -357,8 +356,6 @@ has exactly one output and nothing to submit.
   template; every token empty; a literal-only template.
 - `template`: unknown token, unclosed brace, stray braces, empty template.
 - `presets`: each preset produces its documented example.
-- `config-params`: round-trip Config → query string → Config, including a
-  template containing `/`, `{`, `}` and spaces.
 
 Store tests cover applying a preset and clearing values. Component tests cover
 `BranchPreview` (segments colored by provenance) and `CopyButton`.

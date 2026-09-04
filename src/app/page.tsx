@@ -12,11 +12,9 @@ import { GitCommand } from '@/components/branch-output/GitCommand';
 import { ValidationReport } from '@/components/branch-output/ValidationReport';
 import { Panel } from '@/components/ui/Panel';
 import { ShortcutHints } from '@/components/ui/ShortcutHints';
-import { useConfigUrlSync } from '@/store/use-config-url-sync';
 import { useShortcuts } from '@/store/use-shortcuts';
 
 export default function Home() {
-    useConfigUrlSync();
     const { copied } = useShortcuts();
 
     return (

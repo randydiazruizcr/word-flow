@@ -34,10 +34,6 @@ Las convenciones que vienen listas:
 | GitFlow             | `{type}/{slug}`                    | `feature/arreglar-login`          |
 | Ticket primero      | `{ticket}-{slug}`                  | `1234-arreglar-login`             |
 
-**La plantilla, el prefijo y la lista de tipos viajan en la URL.** Le pasás el link a tu
-equipo y le llega la convención puesta. El ticket y la descripción no viajan: son tuyos y de
-esta pestaña nada más.
-
 ### Atajos
 
 | Teclas                 | Qué hace                    |

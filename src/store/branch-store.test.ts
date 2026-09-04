@@ -52,10 +52,4 @@ describe('branch-store', () => {
         expect(useBranchStore.getState().values.description).toBe('');
         expect(useBranchStore.getState().config.project).toBe('CON');
     });
-
-    it('loadConfig solo pisa lo que viene', () => {
-        useBranchStore.getState().loadConfig({ project: 'CON' });
-        expect(useBranchStore.getState().config.project).toBe('CON');
-        expect(useBranchStore.getState().config.template).toBe(DEFAULT_PRESET.template);
-    });
 });

@@ -27,7 +27,6 @@ type BranchStore = {
     setDescription: (description: string) => void;
     applyPreset: (id: string) => void;
     clearValues: () => void;
-    loadConfig: (partial: Partial<Config>) => void;
 };
 
 export function parseTypeList(raw: string): string[] {
@@ -83,6 +82,4 @@ export const useBranchStore = create<BranchStore>((set) => ({
 
     clearValues: () =>
         set((state) => ({ values: { ...state.values, ticket: '', description: '' } })),
-
-    loadConfig: (partial) => set((state) => ({ config: { ...state.config, ...partial } })),
 }));
