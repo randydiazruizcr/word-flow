@@ -48,6 +48,19 @@ const eslintConfig = [
     ...nextTypeScript,
     prettier,
     {
+        // eslint-plugin-react detecta la versión de React llamando a
+        // context.getFilename(), método que ESLint 10 quitó del contexto de
+        // las reglas; con settings.react.version en 'detect' (el default de
+        // eslint-config-next) react/display-name reventaba con
+        // "contextOrFilename.getFilename is not a function". Se fija leyendo
+        // la versión instalada en vez de dejar que la detecte.
+        settings: {
+            react: {
+                version: require('react/package.json').version,
+            },
+        },
+    },
+    {
         rules: {
             '@typescript-eslint/no-unused-vars': [
                 'error',
