@@ -67,13 +67,13 @@ yarn install
 yarn dev        # http://localhost:3000
 ```
 
-| Comando         | Qué hace                            |
-| --------------- | ----------------------------------- |
-| `yarn dev`      | servidor de desarrollo              |
-| `yarn validate` | type-check + lint + formato + tests |
-| `yarn build`    | build de producción                 |
-| `yarn test`     | Vitest, una corrida                 |
-| `yarn e2e`      | Playwright, en el puerto 3100       |
+| Comando         | Qué hace                                    |
+| --------------- | ------------------------------------------- |
+| `yarn dev`      | servidor de desarrollo                      |
+| `yarn validate` | type-check + lint + formato + tests + build |
+| `yarn build`    | build de producción                         |
+| `yarn test`     | Vitest, una corrida                         |
+| `yarn e2e`      | Playwright, en el puerto 3100               |
 
 Las decisiones de diseño, con las alternativas que se descartaron y por qué, están en
 [`docs/specs/2026-09-03-word-flow-design.md`](docs/specs/2026-09-03-word-flow-design.md).
