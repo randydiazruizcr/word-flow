@@ -7,3 +7,9 @@ export const SITE_NAME = 'word-flow';
 export const SITE_TITLE = 'word-flow · Nombres de rama de git';
 export const SITE_DESCRIPTION =
     'Armá nombres de rama de git con tu propia plantilla: sin tildes, sin separadores de más y válidos para git. Todo pasa en tu navegador.';
+
+/** Credits the developer until a company name is chosen; this is the one place to change it. */
+export const DEVELOPER = {
+    name: 'Randy Díaz Ruiz',
+    url: 'https://portfolio-nu-sand-25.vercel.app',
+} as const;
