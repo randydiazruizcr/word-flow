@@ -12,7 +12,7 @@ import { GitCommand } from '@/components/branch-output/GitCommand';
 import { ValidationReport } from '@/components/branch-output/ValidationReport';
 import { Panel } from '@/components/ui/Panel';
 import { ShortcutHints } from '@/components/ui/ShortcutHints';
-import { DEVELOPER } from '@/lib/site';
+import { DEVELOPER, SITE_NAME } from '@/lib/site';
 import { useShortcuts } from '@/store/use-shortcuts';
 
 export default function Home() {
@@ -52,16 +52,21 @@ export default function Home() {
 
             <ShortcutHints copied={copied} />
 
-            <footer className="mt-auto border-t border-line pt-4 text-xs text-ink-muted">
-                Desarrollado por{' '}
-                <a
-                    href={DEVELOPER.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-ink-mid underline underline-offset-2 hover:text-ink"
-                >
-                    {DEVELOPER.name}
-                </a>
+            <footer className="mt-auto flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-line pt-4 text-xs text-ink-muted">
+                <span>
+                    Desarrollado por{' '}
+                    <a
+                        href={DEVELOPER.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-ink-mid underline underline-offset-2 hover:text-ink"
+                    >
+                        {DEVELOPER.name}
+                    </a>
+                </span>
+                <span>
+                    © {new Date().getFullYear()} {SITE_NAME}. Todos los derechos reservados.
+                </span>
             </footer>
         </main>
     );
